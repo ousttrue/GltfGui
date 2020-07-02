@@ -9,13 +9,17 @@ namespace GltfGui
         D3D11Device m_d3d11;
         DXGISwapChainForHWND m_swapchain;
         D3D11Shader m_shader;
-        D3D11Model m_model;
+        // D3D11Model m_model;
+        D3D11Mesh m_mesh;
 
         public void Dispose()
         {
-            m_model.Dispose();
+            m_mesh.Dispose();
+            m_mesh = null;
             m_swapchain.Dispose();
+            m_swapchain = null;
             m_d3d11.Dispose();
+            m_d3d11 = null;
         }
 
         public D3DApp()
@@ -24,7 +28,8 @@ namespace GltfGui
             Console.WriteLine(m_d3d11);
             m_swapchain = new DXGISwapChainForHWND();
             m_shader = D3D11Shader.CreateSampleShader();
-            m_model = D3D11Model.CreateTriangle();
+            // m_model = D3D11Model.CreateTriangle();
+            m_mesh = D3D11Mesh.CreateTriangle();
         }
 
         public void Resize(HWND _, int w, int h)
@@ -84,7 +89,8 @@ namespace GltfGui
 
                 m_shader.Setup(m_d3d11.Device, m_d3d11.Context);
 
-                m_model.Draw(m_d3d11.Device, m_d3d11.Context, m_shader.Layout.AsSpan());
+                // m_model.Draw(m_d3d11.Device, m_d3d11.Context, m_shader.Layout.AsSpan());
+                m_mesh.Draw(m_d3d11.Device, m_d3d11.Context, m_shader.VertexAttributes.AsSpan());
 
                 // flush
                 End();

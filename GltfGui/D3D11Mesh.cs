@@ -151,7 +151,7 @@ namespace GltfGui
                 ref MemoryMarshal.GetReference(strides),
                 ref MemoryMarshal.GetReference(offsets));
 
-            context.IASetIndexBuffer(m_indexBuffer.Buffer.Ptr, m_indexFormat, 0);
+            context.IASetIndexBuffer(m_indexBuffer.GetPtr(device), m_indexFormat, 0);
             context.IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY.D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             context.DrawIndexed((uint)m_indexCount, 0, 0);
         }
@@ -159,25 +159,25 @@ namespace GltfGui
         {
             var model = new D3D11Mesh();
 
-            var positions = new Vector3[]{
-                new Vector3(0.0f, 0.0f, 0.0f),
-                new Vector3(0.5f, 0.5f, 0.0f),
-                new Vector3(0.5f, -0.5f, 0.0f),
+            var positions = new Vector4[]{
+                new Vector4(0.0f, 0.0f, 0.0f, 1),
+                new Vector4(0.5f, 0.5f, 0.0f, 1),
+                new Vector4(0.5f, -0.5f, 0.0f, 1),
             };
-            var positionSpan = MemoryMarshal.Cast<Vector3, byte>(positions.AsSpan());
+            var positionSpan = MemoryMarshal.Cast<Vector4, byte>(positions.AsSpan());
             model.SetVertexAttribute(Semantics.POSITION,
                 positionSpan.ToArray().AsMemory(),
                 Marshal.SizeOf(positions[0].GetType()));
 
-            var colors = new Vector4[]{
-                new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
-                new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
-                new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
-            };
-            var colorSpan = MemoryMarshal.Cast<Vector4, byte>(colors.AsSpan());
-            model.SetVertexAttribute(Semantics.COLOR,
-                colorSpan.ToArray().AsMemory(),
-                Marshal.SizeOf(colors[0].GetType()));
+            // var colors = new Vector4[]{
+            //     new Vector4(1.0f, 0.0f, 0.0f, 1.0f),
+            //     new Vector4(0.0f, 1.0f, 0.0f, 1.0f),
+            //     new Vector4(0.0f, 0.0f, 1.0f, 1.0f),
+            // };
+            // var colorSpan = MemoryMarshal.Cast<Vector4, byte>(colors.AsSpan());
+            // model.SetVertexAttribute(Semantics.COLOR,
+            //     colorSpan.ToArray().AsMemory(),
+            //     Marshal.SizeOf(colors[0].GetType()));
 
             Span<int> indices = stackalloc int[]
             {
